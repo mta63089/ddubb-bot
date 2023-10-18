@@ -10,25 +10,31 @@ export function handleWelcome(client: Client) {
     client.on('guildMemberAdd', (member: GuildMember) => {
         // Define the emotes to be used in the welcome message
         const emotes = [
-            ':skellpls:',
-            ':nessie:',
-            ':happyclappingcat:',
-            ':hibubble:',
-            ':pikachuhearts:',
-            ':squidwarddance:',
+            '<a:happykitty:1164238270952128623>',
+            '<a:nessie:1164238284122235042>',
+            '<a:happyclappingcat:1164238246268653628>',
+            '<a:hibubble:1164238233186603062>',
+            '<a:pikachuhearts:1164238218410078359>',
+            '<a:squidwarddance:1164238277524598865>',
         ];
 
         // Define the welcome messages
         const messages = [
             `Welcome to the server, ${member.user.username}! ${
                 emotes[Math.floor(Math.random() * emotes.length)]
-            } Please go to the #rules-and-terms channel and react to the post to gain access to the rest of the server.`,
+            } Please go to the <#${
+                process.env.RULES_AND_TERMS_CHANNEL_ID
+            }> and react to the post to gain access to the rest of the server.`,
             `Hello, ${member.user.username}! We're glad you're here. ${
                 emotes[Math.floor(Math.random() * emotes.length)]
-            } Check the #rules-and-terms channel and react to the post to see the rest of the channels.`,
+            } Check the <#${
+                process.env.RULES_AND_TERMS_CHANNEL_ID
+            }> channel and react to the post to see the rest of the channels.`,
             `Hi ${member.user.username}! Welcome aboard. ${
                 emotes[Math.floor(Math.random() * emotes.length)]
-            } Don't forget to visit the #rules-and-terms channel and react to the post to gain access to the rest of the server.`,
+            } Don't forget to visit the <#${
+                process.env.RULES_AND_TERMS_CHANNEL_ID
+            }> channel and react to the post to gain access to the rest of the server.`,
         ];
 
         // Choose a random welcome message
