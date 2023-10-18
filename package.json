@@ -1,14 +1,29 @@
 {
   "name": "ddubb-bot",
   "version": "0.0.1",
+  "private": "true",
   "description": "ddubb discord bot",
   "main": "index.js",
   "scripts": {
+    "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mta630/ddubb-bot.git"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "pretty-quick --staged",
+      "eslint --fix",
+      "git add"
+    ]
   },
   "keywords": [
     "discord",
@@ -26,5 +41,12 @@
   "homepage": "https://github.com/mta630/ddubb-bot#readme",
   "dependencies": {
     "discord.js": "^14.13.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.51.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.1",
+    "prettier": "^3.0.3",
+    "pretty-quick": "^3.1.3"
   }
 }
