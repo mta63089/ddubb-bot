@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/mta630/ddubb-bot/issues"
   },
-  "homepage": "https://github.com/mta630/ddubb-bot#readme"
+  "homepage": "https://github.com/mta630/ddubb-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.13.0"
+  }
 }
