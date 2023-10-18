@@ -12,6 +12,9 @@ const myIntents = [
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildModeration,
+    GatewayIntentBits.GuildMessageTyping,
 ];
 
 // Creates a new Discord client

@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Function to handle welcome messages and role assignment on reaction
-export function handleWelcome(client: Client) {
+export async function handleWelcome(client: Client) {
     // Event listener for when a new member joins the server
     client.on('guildMemberAdd', (member: GuildMember) => {
         // Define the emotes to be used in the welcome message
@@ -55,6 +55,9 @@ export function handleWelcome(client: Client) {
 
     // Event listener for when a reaction is added to a message
     client.on('messageReactionAdd', async (reaction, user) => {
+        console.log('reaction: ', reaction);
+        console.log('user: ', user);
+
         if (reaction.partial) {
             try {
                 await reaction.fetch();
@@ -71,11 +74,16 @@ export function handleWelcome(client: Client) {
         if (
             reaction.message.channel.id !==
             process.env.RULES_AND_TERMS_CHANNEL_ID
-        )
+        ) {
+            console.log('reaction not in correct channel, exiting block');
             return;
+        }
 
         // Check if the reaction is to the rules and terms message
-        if (reaction.message.id !== process.env.RULES_AND_TERMS_POST_ID) return;
+        if (reaction.message.id !== process.env.RULES_AND_TERMS_POST_ID) {
+            console.log('reaction not in correct message, exiting block');
+            return;
+        }
 
         // Fetch the user if it's a partial
         if (user.partial) {
@@ -102,6 +110,7 @@ export function handleWelcome(client: Client) {
         if (role && member) {
             try {
                 await member.roles.add(role);
+                `successfully assigned the role of ${role.name} to ${user}`;
             } catch (error) {
                 console.error(
                     'Something went wrong when adding the role: ',
