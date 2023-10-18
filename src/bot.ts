@@ -1,11 +1,11 @@
-// Require the discord library module
-const Discord = require('discord.js');
+import dotenv from 'dotenv';
+import Discord, { GatewayIntentBits } from 'discord.js';
+
+// env configuration
+dotenv.config();
 
 // Define the intents to use
-const myIntents = new Discord.Intents([
-    Discord.Intents.FLAGS.Guilds,
-    Discord.Intents.FLAGS.GuildMessages,
-]);
+const myIntents = [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages];
 
 // Creates a new Discord client
 const client = new Discord.Client({ intents: myIntents });
