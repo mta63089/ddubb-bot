@@ -23,8 +23,16 @@ export class MyClient extends Client {
 export async function handleCommands(client: MyClient) {
     // Read the command files
     const commandFiles = fs
-        .readdirSync('./src/commands')
-        .filter((file) => file.endsWith('.ts'));
+        .readdirSync(
+            process.env.NODE_ENV === 'production'
+                ? './build/commands'
+                : './src/commands',
+        )
+        .filter((file) =>
+            file.endsWith(
+                process.env.NODE_ENV === 'production' ? '.js' : '.ts',
+            ),
+        );
 
     // Import the commands
     for (const file of commandFiles) {

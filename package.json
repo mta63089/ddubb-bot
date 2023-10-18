@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -p .",
-    "start": "node build/bot.js",
+    "start": "NODE_ENV=production node build/bot.js",
     "dev": "ts-node src/bot.ts"
   },
   "repository": {

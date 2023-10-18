@@ -34,7 +34,7 @@ const greetings: { [key: string]: string } = {
 };
 
 // Define the command
-const hiCommand = {
+const hi = {
     name: 'hi',
     description: 'Say hi in a random language',
     execute: (message: Message) => {
@@ -49,4 +49,4 @@ const hiCommand = {
     },
 };
 
-export default hiCommand;
+export default hi;

@@ -55,6 +55,18 @@ export function handleWelcome(client: Client) {
 
     // Event listener for when a reaction is added to a message
     client.on('messageReactionAdd', async (reaction, user) => {
+        if (reaction.partial) {
+            try {
+                await reaction.fetch();
+            } catch (error) {
+                console.error(
+                    'Something went wrong when fetching the reaction: ',
+                    error,
+                );
+                return;
+            }
+        }
+
         // Check if the reaction is in the rules-and-terms channel
         if (
             reaction.message.channel.id !==
