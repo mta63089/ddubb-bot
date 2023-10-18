@@ -1,7 +1,8 @@
+// Import necessary modules from discord.js and fs
 import fs from 'fs';
 import { Client, ClientOptions, Collection, Message } from 'discord.js';
 
-// Define the Command type
+// Define the Command interface
 interface Command {
     name: string;
     description: string;
@@ -13,14 +14,13 @@ export class MyClient extends Client {
     commands: Collection<string, Command>;
     constructor(options: ClientOptions) {
         super(options);
+        // Initialize the commands collection
         this.commands = new Collection();
     }
 }
 
-export function handleCommands(client: MyClient) {
-    // Create a new collection for the commands
-    client.commands = new Collection();
-
+// Export the handleCommands function
+export async function handleCommands(client: MyClient) {
     // Read the command files
     const commandFiles = fs
         .readdirSync('./src/commands')
@@ -28,24 +28,32 @@ export function handleCommands(client: MyClient) {
 
     // Import the commands
     for (const file of commandFiles) {
-        const command: Command = require(`./commands/${file}`);
+        // Use dynamic import to import the command
+        const commandModule = await import(`../commands/${file}`);
+
+        // Extract the command from the module
+        const command: Command = commandModule.default;
+
+        // Add the command to the commands collection
         client.commands.set(command.name, command);
     }
 
     // Listen for messages
     client.on('messageCreate', (message: Message) => {
-        // only accept commands that start with `!` and are not from the bot itself
+        // Ignore messages that do not start with '!' or are from bots
         if (!message.content.startsWith('!') || message.author.bot) return;
 
+        // Extract the command and arguments from the message
         const args = message.content.slice('!'.length).trim().split(/ +/);
-        const command = args.shift()?.toLowerCase();
+        const commandName = args.shift()?.toLowerCase();
 
-        // If the command doesn't exist exit block
-        if (!command || !client.commands.has(command)) return;
+        // Ignore messages that do not correspond to a command
+        if (!commandName || !client.commands.has(commandName)) return;
 
-        // execute the command and catch any errors and print them in the chat while logging them to console
+        // Execute the command
         try {
-            client.commands.get(command)?.execute(message, args);
+            const command = client.commands.get(commandName);
+            command?.execute(message, args);
         } catch (error) {
             console.error(error);
             message.reply('There was an error trying to execute that command!');

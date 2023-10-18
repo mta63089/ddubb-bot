@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
-import { Client, GatewayIntentBits } from 'discord.js';
-import { MyClient, handleCommands } from './commandHandler';
+import { GatewayIntentBits } from 'discord.js';
+import { MyClient, handleCommands } from './handlers/commandHandler';
+import { handleWelcome } from './handlers/welcomeHandler';
 
 // env configuration
 dotenv.config();
@@ -23,6 +24,9 @@ client.once('ready', () => {
 
 // Handle commands
 handleCommands(client);
+
+// Handle Welcome
+handleWelcome(client);
 
 // login to discord with your app's token
 client.login(process.env.DISCORD_APP_TOKEN);
