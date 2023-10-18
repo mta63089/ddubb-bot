@@ -1,25 +1,28 @@
 import dotenv from 'dotenv';
-import Discord, { GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits } from 'discord.js';
+import { MyClient, handleCommands } from './commandHandler';
 
 // env configuration
 dotenv.config();
 
 // Define the intents to use
-const myIntents = [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages];
+const myIntents = [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
+];
 
 // Creates a new Discord client
-const client = new Discord.Client({ intents: myIntents });
+const client = new MyClient({ intents: myIntents });
 
 // Set up an event listener that runs when the client is ready
 client.once('ready', () => {
     console.log('Ready!');
 });
 
-// Sets up another event listener that runs whenever a message is received.
-client.on('messageCreate', (message) => {
-    // log the message to the console
-    console.log(message.content);
-});
+// Handle commands
+handleCommands(client);
 
 // login to discord with your app's token
 client.login(process.env.DISCORD_APP_TOKEN);
