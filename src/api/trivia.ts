@@ -4,7 +4,10 @@ export interface ScoreRow {
     userId: string;
     score: number;
     answeredQuestions: string;
+    currentQuestion: string;
     correctAnswer: string;
+    lastReset: Date;
+    questionsAnsweredToday: number;
 }
 
 export async function fetchTriviaQuestion() {

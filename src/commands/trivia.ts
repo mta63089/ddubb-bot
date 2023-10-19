@@ -8,22 +8,21 @@ const trivia = {
     execute: async (message: Message) => {
         const question = await fetchTriviaQuestion();
 
-        // Check if the user has already answered this question
-        db.get(
-            'SELECT * FROM scores WHERE userId = ? AND answeredQuestions LIKE ?',
-            [message.author.id, `%${question.question}%`],
-            (err, row) => {
+        // Store the trivia question in the database
+        db.run(
+            'INSERT OR REPLACE INTO scores (userId, currentQuestion, correctAnswer) VALUES (?, ?, ?)',
+            [message.author.id, question.question, question.correct_answer],
+            (err) => {
                 if (err) {
                     console.error(err.message);
                     return;
                 }
 
-                if (row) {
-                    message.reply('You have already answered this question!');
-                } else {
-                    // Send the trivia question to the user
-                    message.reply(question.question);
-                }
+                // Send the trivia question to the user
+                message.reply(question.question);
+                message.reply(
+                    'Send your answer by typing !answer _answer here_',
+                );
             },
         );
     },

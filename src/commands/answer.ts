@@ -1,5 +1,3 @@
-// src/commands/answer.ts
-
 import { Message } from 'discord.js';
 import { ScoreRow } from '../api/trivia';
 import db from '../db/database';
@@ -21,7 +19,7 @@ const answer = {
                     return;
                 }
 
-                if (row) {
+                if (row && row.currentQuestion) {
                     // Check if the user's answer is correct
                     if (
                         userAnswer.toLowerCase() ===
@@ -29,7 +27,7 @@ const answer = {
                     ) {
                         // Update the user's score in the database
                         db.run(
-                            'UPDATE scores SET score = score + 1 WHERE userId = ?',
+                            'UPDATE scores SET score = score + 1, currentQuestion = NULL, correctAnswer = NULL WHERE userId = ?',
                             [message.author.id],
                             (err) => {
                                 if (err) {

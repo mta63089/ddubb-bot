@@ -2,9 +2,45 @@ import dotenv from 'dotenv';
 import { GatewayIntentBits, Partials } from 'discord.js';
 import { MyClient, handleCommands } from './handlers/commandHandler';
 import { handleWelcome } from './handlers/welcomeHandler';
+import { ScoreRow } from './api/trivia';
+import * as cron from 'node-cron';
+import db from './db/database';
 
 // env configuration
 dotenv.config();
+
+// Schedule a task to run every minute to check for trivia reset
+cron.schedule('0 0 * * *', () => {
+    // Get the current time
+    const now = new Date();
+    // Fetch all scores from the database
+    db.all('SELECT * FROM scores', (err, rows: ScoreRow[]) => {
+        if (err) {
+            console.error(err.message);
+            return;
+        }
+        // Iterate over each row
+        for (const row of rows) {
+            // Check if it's time to reset the questionsAnsweredToday field
+            const lastReset = new Date(row.lastReset);
+            const nextReset = new Date(
+                lastReset.getTime() + 24 * 60 * 60 * 1000,
+            );
+            if (now >= nextReset) {
+                // Reset the questionsAnsweredToday field and update the lastReset field
+                db.run(
+                    'UPDATE scores SET questionsAnsweredToday = 0, lastReset = ? WHERE userId = ?',
+                    [now, row.userId],
+                    (err) => {
+                        if (err) {
+                            console.error(err.message);
+                        }
+                    },
+                );
+            }
+        }
+    });
+});
 
 // Define the intents to use
 const myIntents = [

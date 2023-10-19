@@ -11,9 +11,13 @@ db.run(
     `CREATE TABLE IF NOT EXISTS scores (
   userId TEXT PRIMARY KEY,
   score INTEGER,
-  answeredQuestions TEXT
+  answeredQuestions TEXT,
+  currentQuestion TEXT,
+  correctAnswer TEXT,
+  lastReset DATETIME DEFAULT CURRENT_TIMESTAMP,
+  questionsAnsweredToday INTEGER DEFAULT 0
 )`,
-    (err) => {
+    (err: any) => {
         if (err) {
             console.error(err.message);
         }
