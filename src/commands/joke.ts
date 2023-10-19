@@ -1,5 +1,5 @@
-// joke.ts
 import { Message } from 'discord.js';
+import axios from 'axios';
 
 export interface Joke {
     error: boolean;
@@ -21,12 +21,9 @@ export default {
     description: 'Get a random joke.',
     async execute(message: Message, args: string[]) {
         try {
-            // Dynamic import of node-fetch
-            const fetch = (await import('node-fetch')).default;
-
-            // Fetch a random joke from the JokeAPI
-            const response = await fetch('https://v2.jokeapi.dev/joke/Any');
-            const data = (await response.json()) as Joke;
+            // Use axios to fetch a random joke from the JokeAPI
+            const response = await axios.get('https://v2.jokeapi.dev/joke/Any');
+            const data = response.data as Joke;
             if (!data) return;
             // Check if the joke is a single-part joke or a two-part joke
             const joke =
