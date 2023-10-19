@@ -1,6 +1,6 @@
 import { Database } from 'sqlite3';
 
-const db = new Database('./trivia.db', (err) => {
+const db = new Database('./src/db/trivia.db', (err) => {
     if (err) {
         console.error(err.message);
     }

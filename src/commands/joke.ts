@@ -22,7 +22,9 @@ export default {
     async execute(message: Message, args: string[]) {
         try {
             // Use axios to fetch a random joke from the JokeAPI
-            const response = await axios.get('https://v2.jokeapi.dev/joke/Any');
+            const response = await axios.get(
+                'https://v2.jokeapi.dev/joke/Any?safe-mode',
+            );
             const data = response.data as Joke;
             if (!data) return;
             // Check if the joke is a single-part joke or a two-part joke
