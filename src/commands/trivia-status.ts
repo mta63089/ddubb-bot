@@ -21,7 +21,7 @@ const status = {
                 if (row) {
                     // Calculate the percentage of questions answered correctly
                     const percentageCorrect =
-                        (row.score / row.answeredQuestions.length) * 100;
+                        (row.score / (row.answeredQuestions.length || 0)) * 100;
 
                     // Calculate the time until the next reset
                     const now = new Date();
