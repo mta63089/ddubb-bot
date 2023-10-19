@@ -1,3 +1,4 @@
+// trivia.ts
 import { Message } from 'discord.js';
 import db from '../db/database';
 import { fetchTriviaQuestion } from '../api/trivia';
@@ -10,8 +11,13 @@ const trivia = {
 
         // Store the trivia question in the database
         db.run(
-            'INSERT OR REPLACE INTO scores (userId, currentQuestion, correctAnswer) VALUES (?, ?, ?)',
-            [message.author.id, question.question, question.correct_answer],
+            'INSERT OR REPLACE INTO scores (userId, currentQuestion, correctAnswer, answeredQuestions) VALUES (?, ?, ?, COALESCE((SELECT answeredQuestions FROM scores WHERE userId = ?), 0))',
+            [
+                message.author.id,
+                question.question,
+                question.correct_answer,
+                message.author.id,
+            ],
             (err) => {
                 if (err) {
                     console.error(err.message);
