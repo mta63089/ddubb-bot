@@ -25,8 +25,9 @@ const status = {
 
                     // Calculate the time until the next reset
                     const now = new Date();
+                    const lastReset = new Date(row.lastReset);
                     const nextReset = new Date(
-                        row.lastReset.getTime() + 24 * 60 * 60 * 1000,
+                        lastReset.getTime() + 24 * 60 * 60 * 1000,
                     );
                     const timeUntilReset = Math.max(
                         0,
@@ -36,7 +37,7 @@ const status = {
 
                     // Format the status
                     const status = `
-                        Points: ${row.score}
+                        Points: ${row.score || 0}
                         Questions Remaining for the Day: ${
                             2 - row.questionsAnsweredToday
                         }

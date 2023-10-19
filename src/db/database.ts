@@ -15,7 +15,8 @@ db.run(
   currentQuestion TEXT,
   correctAnswer TEXT,
   lastReset DATETIME DEFAULT CURRENT_TIMESTAMP,
-  questionsAnsweredToday INTEGER DEFAULT 0
+  questionsAnsweredToday INTEGER DEFAULT 0,
+  answers TEXT
 )`,
     (err: any) => {
         if (err) {

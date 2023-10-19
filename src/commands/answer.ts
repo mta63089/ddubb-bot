@@ -1,4 +1,3 @@
-// answer.ts
 import { Message } from 'discord.js';
 import { ScoreRow } from '../api/trivia';
 import db from '../db/database';
@@ -8,7 +7,7 @@ const answer = {
     description: 'Answer a trivia question!',
     execute: async (message: Message, args: string[]) => {
         // Get the user's answer from the arguments
-        const userAnswer = args.join(' ');
+        const userAnswer = args[0]; // Expecting a single character (a, b, c, or d)
 
         // Get the correct answer from the database
         db.get(
@@ -21,10 +20,20 @@ const answer = {
                 }
 
                 if (row && row.currentQuestion) {
-                    // Update the answeredQuestions field regardless of whether the answer is correct
+                    // Map the user's answer to an index
+                    const answerIndex = ['a', 'b', 'c', 'd'].indexOf(
+                        userAnswer.toLowerCase(),
+                    );
+
+                    // Check if the user's answer is correct
+                    const isCorrect =
+                        answerIndex !== -1 &&
+                        row.answers[answerIndex] === row.correctAnswer;
+
+                    // Update the user's score in the database
                     db.run(
-                        'UPDATE scores SET answeredQuestions = answeredQuestions + 1 WHERE userId = ?',
-                        [message.author.id],
+                        'UPDATE scores SET score = score + ?, currentQuestion = NULL, correctAnswer = NULL, answers = NULL, questionsRemaining = questionsRemaining - 1 WHERE userId = ?',
+                        [isCorrect ? 1 : 0, message.author.id],
                         (err) => {
                             if (err) {
                                 console.error(err.message);
@@ -32,22 +41,7 @@ const answer = {
                         },
                     );
 
-                    // Check if the user's answer is correct
-                    if (
-                        userAnswer.toLowerCase() ===
-                        row.correctAnswer.toLowerCase()
-                    ) {
-                        // Update the user's score in the database
-                        db.run(
-                            'UPDATE scores SET score = score + 1, currentQuestion = NULL, correctAnswer = NULL WHERE userId = ?',
-                            [message.author.id],
-                            (err) => {
-                                if (err) {
-                                    console.error(err.message);
-                                }
-                            },
-                        );
-
+                    if (isCorrect) {
                         message.reply('Correct answer!');
                     } else {
                         message.reply(
