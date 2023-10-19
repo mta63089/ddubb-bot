@@ -55,9 +55,6 @@ export async function handleWelcome(client: Client) {
 
     // Event listener for when a reaction is added to a message
     client.on('messageReactionAdd', async (reaction, user) => {
-        console.log('reaction: ', reaction);
-        console.log('user: ', user);
-
         if (reaction.partial) {
             try {
                 await reaction.fetch();
@@ -68,6 +65,11 @@ export async function handleWelcome(client: Client) {
                 );
                 return;
             }
+        }
+
+        if (reaction.emoji.name !== '✋') {
+            console.log('Incorrect emoji, exiting block');
+            return;
         }
 
         // Check if the reaction is in the rules-and-terms channel

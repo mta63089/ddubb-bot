@@ -6,7 +6,7 @@ import { Client, ClientOptions, Collection, Message } from 'discord.js';
 interface Command {
     name: string;
     description: string;
-    execute: (message: Message, args?: string[]) => void;
+    execute: (message: Message, args?: string[], client?: MyClient) => void;
 }
 
 // Extend the Client class to add the commands property
@@ -61,7 +61,7 @@ export async function handleCommands(client: MyClient) {
         // Execute the command
         try {
             const command = client.commands.get(commandName);
-            command?.execute(message, args);
+            command?.execute(message, args, client);
         } catch (error) {
             console.error(error);
             message.reply('There was an error trying to execute that command!');

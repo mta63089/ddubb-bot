@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc -p .",
     "start": "NODE_ENV=production node build/bot.js",
+    "prod": "tsc -p . && NODE_ENV=production node build/bot.js",
     "dev": "ts-node src/bot.ts"
   },
   "repository": {
@@ -42,7 +43,8 @@
   "homepage": "https://github.com/mta630/ddubb-bot#readme",
   "dependencies": {
     "discord.js": "^14.13.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "eslint": "^8.51.0",

@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { GatewayIntentBits } from 'discord.js';
+import { GatewayIntentBits, Partials } from 'discord.js';
 import { MyClient, handleCommands } from './handlers/commandHandler';
 import { handleWelcome } from './handlers/welcomeHandler';
 
@@ -15,10 +15,20 @@ const myIntents = [
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.GuildInvites,
 ];
 
 // Creates a new Discord client
-const client = new MyClient({ intents: myIntents });
+const client = new MyClient({
+    intents: myIntents,
+    partials: [
+        Partials.Message,
+        Partials.Reaction,
+        Partials.Channel,
+        Partials.User,
+        Partials.GuildMember,
+    ],
+});
 
 // Set up an event listener that runs when the client is ready
 client.once('ready', () => {
