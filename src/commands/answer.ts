@@ -1,3 +1,4 @@
+// src/commands/answer.ts
 import { Message } from 'discord.js';
 import { ScoreRow } from '../api/trivia';
 import db from '../db/database';
@@ -6,8 +7,12 @@ const answer = {
     name: 'answer',
     description: 'Answer a trivia question!',
     execute: async (message: Message, args: string[]) => {
-        // Get the user's answer from the arguments
+        // Validate the user's answer
         const userAnswer = args[0]; // Expecting a single character (a, b, c, or d)
+        if (!['a', 'b', 'c', 'd'].includes(userAnswer.toLowerCase())) {
+            message.reply('Invalid answer. Please answer with a, b, c, or d.');
+            return;
+        }
 
         // Get the correct answer from the database
         db.get(
@@ -16,10 +21,13 @@ const answer = {
             (err, row: ScoreRow) => {
                 if (err) {
                     console.error(err.message);
+                    message.reply(
+                        'An error occurred while processing your answer. Please try again later.',
+                    );
                     return;
                 }
 
-                if (row && row.currentQuestion) {
+                if (row && 'currentQuestion' in row && row.currentQuestion) {
                     // Map the user's answer to an index
                     const answerIndex = ['a', 'b', 'c', 'd'].indexOf(
                         userAnswer.toLowerCase(),
@@ -28,6 +36,8 @@ const answer = {
                     // Check if the user's answer is correct
                     const isCorrect =
                         answerIndex !== -1 &&
+                        'answers' in row &&
+                        'correctAnswer' in row &&
                         row.answers[answerIndex] === row.correctAnswer;
 
                     // Update the user's score in the database
@@ -37,6 +47,9 @@ const answer = {
                         (err) => {
                             if (err) {
                                 console.error(err.message);
+                                message.reply(
+                                    'An error occurred while updating your score. Please try again later.',
+                                );
                             }
                         },
                     );
@@ -45,7 +58,9 @@ const answer = {
                         message.reply('Correct answer!');
                     } else {
                         message.reply(
-                            `Wrong answer! The correct answer was: ${row.correctAnswer}`,
+                            `Wrong answer! The correct answer was: ${
+                                ['A', 'B', 'C', 'D'][Number(row.correctAnswer)]
+                            }`,
                         );
                     }
                 } else {
