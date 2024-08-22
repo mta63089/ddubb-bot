@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/mta630/ddubb-bot#readme",
   "dependencies": {
-    "axios": "^1.6.0",
+    "axios": "^1.7.4",
     "discord.js": "^14.15.3",
     "dotenv": "^16.3.1",
     "he": "^1.2.0",
